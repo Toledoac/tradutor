@@ -57,7 +57,7 @@ if st.button("Traduzir"):
         st.success(translated_text)
 
         # Limpa o campo de entrada
-        st.session_state.input = ""
+        st.experimental_rerun()
     else:
         st.warning("Insira um trecho em inglês antes de clicar em traduzir.")
 
