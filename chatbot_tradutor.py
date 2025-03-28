@@ -13,7 +13,7 @@ if "historico" not in st.session_state:
     st.session_state.historico = []
 
 st.write("""
-Cole um trecho do artigo científico em inglês para traduzir.
+Cole um trecho do artigo científico em inglês e clique em Traduzir.
 Quando quiser encerrar, **escreva 'Fim' e clique em Traduzir**.
 """)
 
