@@ -5,7 +5,7 @@ import openai
 client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="Chatbot Tradutor", layout="centered")
-st.title("Chatbot Tradutor Literal")
+st.title("Chatbot Tradutor")
 
 # Inicializa estados
 if "traduzido" not in st.session_state:
