@@ -4,18 +4,21 @@ import openai
 client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="Chatbot Tradutor", layout="centered")
-st.title("Chatbot Tradutor")
+st.title("Chatbot Tradutor Literal")
+
+# Mensagem de instrução clara
+st.write("""
+Cole um trecho do artigo científico em inglês para traduzir.  
+Quando quiser encerrar, **escreva 'Fim' e clique em Traduzir**.
+""")
 
 # Inicializa variáveis de sessão
 if "encerrar" not in st.session_state:
     st.session_state.encerrar = False
 if "historico" not in st.session_state:
     st.session_state.historico = []
-
-st.write("""
-Cole um trecho do artigo científico em inglês e clique em Traduzir.
-Quando quiser encerrar, **escreva 'Fim' e clique em Traduzir**.
-""")
+if "input" not in st.session_state:
+    st.session_state.input = ""
 
 # Verifica se o usuário decidiu encerrar
 if st.session_state.encerrar:
@@ -33,13 +36,14 @@ user_input = st.text_area("Texto em inglês:", key="input", height=150)
 if st.button("Traduzir"):
     if user_input.strip().lower() in ["fim", "fim."]:
         st.session_state.encerrar = True
-        st.experimental_rerun()
+        st.session_state.input = ""  # Limpa a caixa
+        st.rerun()
 
     elif user_input.strip() != "":
         prompt = f"Traduza literalmente, sem interpretar ou reescrever: {user_input}"
 
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4",
             messages=[
                 {"role": "user", "content": prompt}
             ]
@@ -56,12 +60,13 @@ if st.button("Traduzir"):
         st.markdown("**Tradução:**")
         st.success(translated_text)
 
-        # Limpa o campo de entrada
-        st.experimental_rerun()
+        # Limpa campo para próxima entrada
+        st.session_state.input = ""
+
     else:
         st.warning("Insira um trecho em inglês antes de clicar em traduzir.")
 
-# Mostra histórico (em tempo real, mesmo antes do fim)
+# Mostra histórico abaixo (em tempo real)
 if st.session_state.historico:
     st.subheader("📜 Histórico de traduções:")
     for idx, item in enumerate(st.session_state.historico, 1):
